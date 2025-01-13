@@ -26,8 +26,8 @@ This tutorial outlines the implementation of on-premises Active Directory within
 
 - Create a resource group, virtual network and subnet within azure
 - Create 2 virtual machines, one acting as a DNS server
-- Install
-- Step 4
+- Install Active Directory on DM-1
+- Create Domain Admin user and join Client-1 to the Domain
 
 <h2>Deployment and Configuration Steps</h2>
 
@@ -73,12 +73,30 @@ Click DC-1 under virtual machines, go to Network Settings and then click on the 
 Log in to Clinet-1 VM through remote desktop, type in power shell in the search bar and open it. Type in "ping 10.0.0.4" and if it receives all the packets then it was a success. Now run ipconfig /all and check DNS servers which should be 10.0.0.4 or whatever Private Ip addresss your DC-1 VM had. Now you know you've done it correctly. 
 <br />
 
-<h2>4. </h2>
+<h2>4. Install Active Directory </h2>
 
-![image](https://github.com/user-attachments/assets/9d96ca1a-0523-40e4-a4ee-6ada491beb09)
+![image](https://github.com/user-attachments/assets/390f9b17-d8c5-4286-8a97-329d5a2531b7)
 
 </p>
 <p>
-Log in to Clinet-1 VM through remote desktop, type in power shell in the search bar and open it. Type in "ping 10.0.0.4" and if it receives all the packets then it was a success. Now run ipconfig /all and check DNS servers which should be 10.0.0.4 or whatever Private Ip addresss your DC-1 VM had. Now you know you've done it correctly. 
+Log into the DM-1 VM with Remote Desktop. Click on start and then server manager. Add roles and features, click next until Server roles and click "Active Directory Domain Services" click next and then next, check the box "Restart the destination server automatically if required" and then click install. Now we are going to configure DC-1 to make it a domain controller. From the server Manager, click on the flag shown in the photo and click on "promote this server to a domain controller". Click add new forrest and type mydomain.com and then next. Put an easy password and then next and uncheck the "Specify DNS delegation options" box. Click next until you can press intsall and install it. Log back in with mydomain.com\username as the username from now on. 
+<br />
+
+<h2>4. Create a Domain Admin user within the domain</h2>
+
+![image](https://github.com/user-attachments/assets/6f8aa46c-1fb1-4a14-96f0-e0958265e6ea)
+
+</p>
+<p>
+In DM-1 click start and go to Windows Adminstrative Tools > Active Directory Users and Computers. Right click mydomain.com then click new > Organizational unit and name it “_EMPLOYEES”. Create another one named "_ADMINS". Now we're going to create a new employee. Go to the Admins folder and right click to create new User. Name her Jane Doe and set the username as Jane_admin and password what you want then create it. Now right click the new user, go to Properties, member of, new and type domain admins and click check name. Press ok, apply, ok, no Jane is a domain admin. Now log off and log back in as Jane admin and we will be using her account from now on.
+<br />
+
+<h2>5. Join Client-1 to your domain (mydomain.com)</h2>
+
+![image](https://github.com/user-attachments/assets/dcd96eb8-2138-415f-a0f4-da6d1f8a4517)
+
+</p>
+<p>
+Login to Client-1 as original local admin. Right click start menu and press System. Click rename this PC advanced, click change and type in mydomain.com in the Domain box under Member of. Click apply and then ok and it will restart your VM. Now we're going to verify client-1 shows up in the ADUC. Login into the domain controller and go to Active Directory Users and Computers like before, click computers and you should see Client-1 which means you did it correctly. 
 <br />
 
